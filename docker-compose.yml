@@ -1,9 +1,12 @@
-version: '2'
+version: "2"
 services:
   photon:
     build:
       context: .
       dockerfile: Dockerfile
+    environment:
+      - DOWNLOADS_DIR=/tmp
+      - DATA_DIR=/photon/photon_data/elastisearch
     image: tonsnoei/photon-geocoder:latest
     volumes:
       - ./data:/photon/photon_data
