@@ -1,0 +1,9 @@
+{
+  $schema: "https://docs.renovatebot.com/renovate-schema.json",
+  extends: ["github>angelnu/renovate-config:default-automerge"],
+  platform: "github",
+  username: "polds-bot[bot]",
+  gitAuthor: "polds-bot[bot] <115925344+polds-bot[bot]@users.noreply.github.com>",
+  repositories: ["polds/photon-docker"],
+  renovateFork: true,
+}

@@ -1,0 +1,50 @@
+# .github/workflows/release.yml
+name: Create Tag
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write # needed to create tags and releases
+
+jobs:
+  create-tag:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Get latest tag
+        id: get_tag
+        run: |
+          git fetch --tags
+          TAG=$(git tag --sort=-v:refname | head -n 1)
+          echo "latest tag: $TAG"
+          echo "tag=${TAG:-v0.0.0}" >> "$GITHUB_OUTPUT"
+
+      - name: Bump patch version
+        id: bump
+        run: |
+          OLD=${{ steps.get_tag.outputs.tag }}
+          OLD=${OLD#v}
+          IFS='.' read -r MAJOR MINOR PATCH <<< "$OLD"
+          PATCH=$((PATCH + 1))
+          NEW_TAG="v${MAJOR}.${MINOR}.${PATCH}"
+          echo "new_tag=$NEW_TAG" >> "$GITHUB_OUTPUT"
+
+      - name: Generate changelog
+        id: changelog
+        run: |
+          git log --pretty=format:"- %s (%h)" ${{ steps.get_tag.outputs.tag }}..HEAD > body.txt
+          echo "body<<EOF" >> "$GITHUB_OUTPUT"
+          cat body.txt >> "$GITHUB_OUTPUT"
+          echo "EOF" >> "$GITHUB_OUTPUT"
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.bump.outputs.new_tag }}
+          name: Release ${{ steps.bump.outputs.new_tag }}
+          body: ${{ steps.changelog.outputs.body }}
