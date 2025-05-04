@@ -14,7 +14,7 @@ if [ "$COUNTRY" != "all" ]; then
 fi
 
 # Check if reset.lock exists and remove it and the data directory.
-if [ -f "reset.lock" ]; then
+if [ -f "photon_data/reset.lock" ]; then
     echo "Removing reset.lock and $DATA_DIR"
     
     rm -f photon_data/reset.lock
