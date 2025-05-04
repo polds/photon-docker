@@ -5,7 +5,7 @@ ENV PHOTON_VERSION=0.6.2
 # Install pbzip2 for parallel extraction
 RUN apt-get update \
     && apt-get -y install \
-    pbzip2 bzip2 \
+    lbzip2 pbzip2 bzip2 \
     wget \
     && rm -rf /var/lib/apt/lists/*
 
