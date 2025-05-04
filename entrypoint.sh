@@ -12,6 +12,13 @@ if [ "$COUNTRY" != "all" ]; then
     LINK="http://download1.graphhopper.com/public/extracts/by-country-code/${COUNTRY}/${FILE}"
 fi
 
+# Check if reset.lock exists and remove it and the data directory.
+if [ -f "reset.lock" ]; then
+    echo "Removing reset.lock and $DATA_DIR"
+    rm -f reset.lock
+    rm -rf "$DATA_DIR"
+fi
+
 # Check if the downloads directory is set and exists.
 if [ -n "$DOWNLOADS_DIR" ] && [ -d "$DOWNLOADS_DIR" ] && [ ! -d "$DATA_DIR" ]; then
     # Check if $DOWNLOADS_DIR/$FILE exists.
@@ -24,7 +31,6 @@ if [ -n "$DOWNLOADS_DIR" ] && [ -d "$DOWNLOADS_DIR" ] && [ ! -d "$DATA_DIR" ]; t
         tar -xjf "$DOWNLOADS_DIR/$FILE" -C "$DATA_DIR"
     fi
 fi
-
 
 # Download elasticsearch index.
 if [ ! -d "$DATA_DIR" ]; then
@@ -40,7 +46,7 @@ if [ ! -d "$DATA_DIR" ]; then
         mkdir -p "$DATA_DIR"
         wget --user-agent="${USER_AGENT}" -O "$DOWNLOADS_DIR/$FILE" "$LINK"
         echo "Extracting $FILE to $DATA_DIR"
-        tar -xjf "$DOWNLOADS_DIR/$FILE" -C "$DATA_DIR"
+        tar -xvjf "$DOWNLOADS_DIR/$FILE" -C "$DATA_DIR"
     else
         echo "WARNING: DOWNLOADS_DIR not set or does not exist, downloading to $DATA_DIR"
         echo "Downloading to $DATA_DIR"
@@ -52,7 +58,14 @@ fi
 # Start photon if elastic index exists
 if [ -d "$DATA_DIR" ]; then
     echo "Start photon"
-    java -jar photon.jar "$@"
+    (
+        set -o pipefail
+
+        java -jar photon.jar "$@" 2>&1 | tee /dev/stderr | grep -q 'IndexNotFoundException\[no such index\]'
+        if [ $? -eq 0 ]; then
+            touch reset.lock
+        fi
+    )
 else
     echo "Could not start photon, the search index could not be found"
     exit 1
