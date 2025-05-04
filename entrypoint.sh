@@ -17,7 +17,7 @@ fi
 if [ -f "reset.lock" ]; then
     echo "Removing reset.lock and $DATA_DIR"
     
-    rm -f reset.lock
+    rm -f photon_data/reset.lock
     rm -rf "$DATA_DIR"
 fi
 
@@ -73,7 +73,7 @@ if [ -d "$DATA_DIR" ]; then
 
     if grep -q 'IndexNotFoundException' "$OUTPUT_FILE" || [ $STATUS -ne 0 ]; then
         echo "Triggering reset.lock due to error or failure"
-        touch reset.lock
+        touch photon_data/reset.lock
     fi
 
     rm -f "$OUTPUT_FILE"
