@@ -4,6 +4,7 @@
 DATA_DIR="${DATA_DIR:-"/photon/photon_data/elasticsearch"}"
 DOWNLOADS_DIR="${DOWNLOADS_DIR:-}"
 COUNTRY=${COUNTRY:-"all"}
+BOOTSTRAP=${BOOTSTRAP:-"false"}
 FILE="photon-db-latest.tar.bz2"
 LINK="http://download1.graphhopper.com/public/${FILE}"
 if [ "$COUNTRY" != "all" ]; then
@@ -55,9 +56,14 @@ if [ ! -d "$DATA_DIR" ]; then
     fi
 fi
 
-# Start photon if elastic index exists
+if [ "$BOOTSTRAP" = "true" ] ; then
+    echo "BOOTSTRAP is set to true, skipping photon start."
+    exit 0
+fi
+
+# Start photon if elastic index exists and BOOTSTRAP is set to false.
 if [ -d "$DATA_DIR" ]; then
-    echo "Start photon"
+    echo "Starting photon service..."
     (
         set -o pipefail
 
