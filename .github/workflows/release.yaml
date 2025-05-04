@@ -30,9 +30,13 @@ jobs:
         id: prep
         run: |
           VERSION=dev
-          if [[ $GITHUB_REF == refs/tags/v* ]]; then
-            VERSION=${GITHUB_REF#refs/tags/}
+          if [[ "${{ github.ref_type }}" == "tag" ]]; then
+            VERSION="${{ github.ref_name }}"
           fi
+          echo "GITHUB_REF=$GITHUB_REF"
+          echo "github.ref_type=${{ github.ref_type }}"
+          echo "github.ref_name=${{ github.ref_name }}"
+          echo "VERSION=$VERSION"
           # v1.0.0
           TAGS="${REGISTRY_IMAGE}:${VERSION}"
           # v1.0.0,v1
