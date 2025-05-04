@@ -67,8 +67,9 @@ if [ -d "$DATA_DIR" ]; then
     (
         set -o pipefail
 
-        java -jar photon.jar "$@" 2>&1 | tee /dev/stderr | grep -q 'IndexNotFoundException\[no such index\]'
+        java -jar photon.jar "$@" 2>&1 | tee /dev/stderr | grep -q 'IndexNotFoundException'
         if [ $? -eq 0 ]; then
+            echo "Index not found, resetting photon data..."
             touch reset.lock
         fi
     )
