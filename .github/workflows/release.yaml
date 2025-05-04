@@ -2,13 +2,16 @@ name: Release
 
 on:
   workflow_dispatch:
-  push:
-    tags:
-      - "v*.*.*"
+  release:
+    types: [published]
   pull_request:
     types:
       - opened
       - reopened
+
+permissions:
+  contents: read
+  packages: write
 
 env:
   REGISTRY_IMAGE: ghcr.io/${{ github.repository }}
