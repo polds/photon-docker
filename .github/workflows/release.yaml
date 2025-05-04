@@ -3,7 +3,7 @@ name: Release
 on:
   workflow_dispatch:
   release:
-    types: [created, published, released]
+    types: [published]
   pull_request:
     types:
       - opened

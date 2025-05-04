@@ -49,3 +49,4 @@ jobs:
           tag_name: ${{ steps.bump.outputs.new_tag }}
           name: Release ${{ steps.bump.outputs.new_tag }}
           body: ${{ steps.changelog.outputs.body }}
+          token: ${{ secrets.RELEASE_TOKEN }}
