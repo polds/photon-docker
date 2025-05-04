@@ -38,9 +38,11 @@ jobs:
         id: changelog
         run: |
           git log --pretty=format:"- %s (%h)" ${{ steps.get_tag.outputs.tag }}..HEAD > body.txt
-          echo "body<<EOF" >> "$GITHUB_OUTPUT"
-          cat body.txt >> "$GITHUB_OUTPUT"
-          echo "EOF" >> "$GITHUB_OUTPUT"
+          {
+            echo "body<<EOF"
+            cat body.txt
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
