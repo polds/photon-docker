@@ -30,7 +30,7 @@ if [ -n "$DOWNLOADS_DIR" ] && [ -d "$DOWNLOADS_DIR" ] && [ ! -d "$DATA_DIR" ]; t
         # Extract the file to $DATA_DIR.
         echo "Extracting pre-existing $FILE to $DATA_DIR"
         mkdir -p "$DATA_DIR"
-        tar -I lbzip2 -xvf "$DOWNLOADS_DIR/$FILE" -C "$DATA_DIR"
+        tar -I lbzip2 -xvf "$DOWNLOADS_DIR/$FILE"
     fi
 fi
 
@@ -48,7 +48,7 @@ if [ ! -d "$DATA_DIR" ]; then
         mkdir -p "$DATA_DIR"
         wget --user-agent="${USER_AGENT}" -O "$DOWNLOADS_DIR/$FILE" "$LINK"
         echo "Extracting $FILE to $DATA_DIR"
-        tar -I lbzip2 -xvf "$DOWNLOADS_DIR/$FILE" -C "$DATA_DIR"
+        tar -I lbzip2 -xvf "$DOWNLOADS_DIR/$FILE"
     else
         echo "WARNING: DOWNLOADS_DIR not set or does not exist, downloading to $DATA_DIR"
         echo "Downloading to $DATA_DIR"
