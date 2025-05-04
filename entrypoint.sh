@@ -16,6 +16,7 @@ fi
 # Check if reset.lock exists and remove it and the data directory.
 if [ -f "reset.lock" ]; then
     echo "Removing reset.lock and $DATA_DIR"
+    
     rm -f reset.lock
     rm -rf "$DATA_DIR"
 fi
@@ -64,15 +65,18 @@ fi
 # Start photon if elastic index exists and BOOTSTRAP is set to false.
 if [ -d "$DATA_DIR" ]; then
     echo "Starting photon service..."
-    (
-        set -o pipefail
+    
+    OUTPUT_FILE=$(mktemp)
 
-        java -jar photon.jar "$@" 2>&1 | tee /dev/stderr | grep -q 'IndexNotFoundException'
-        if [ $? -eq 0 ]; then
-            echo "Index not found, resetting photon data..."
-            touch reset.lock
-        fi
-    )
+    java -jar photon.jar "$@" 2>&1 | tee "$OUTPUT_FILE"
+    STATUS=$?
+
+    if grep -q 'IndexNotFoundException' "$OUTPUT_FILE" || [ $STATUS -ne 0 ]; then
+        echo "Triggering reset.lock due to error or failure"
+        touch reset.lock
+    fi
+
+    rm -f "$OUTPUT_FILE"
 else
     echo "Could not start photon, the search index could not be found"
     exit 1
