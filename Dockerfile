@@ -1,4 +1,4 @@
-FROM openjdk:25-jdk-slim@sha256:90191c4b15648d3b81e112ba067fe525c2fe70cd53f2cc3cb205d8ffcc05e8de
+FROM openjdk:25-jdk-slim@sha256:4d9bb48a3d5c2015a5e67eeab7575b6b11eda252aee651e632ef57d24aaf2d82
 
 ENV PHOTON_VERSION=0.6.2
 
