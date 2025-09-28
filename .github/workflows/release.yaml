@@ -25,7 +25,7 @@ jobs:
       image_full_name: ${{ steps.image_info.outputs.full_image }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Prepare
         id: prep
