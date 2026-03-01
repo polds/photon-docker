@@ -5,11 +5,11 @@ DATA_DIR="${DATA_DIR:-"/photon/photon_data/elasticsearch"}"
 DOWNLOADS_DIR="${DOWNLOADS_DIR:-}"
 COUNTRY=${COUNTRY:-"all"}
 BOOTSTRAP=${BOOTSTRAP:-"false"}
-FILE="photon-db-latest.tar.bz2"
+FILE="photon-db-us-250720.tar.bz2"
 LINK="http://download1.graphhopper.com/public/${FILE}"
 if [ "$COUNTRY" != "all" ]; then
     echo "Using country code: $COUNTRY"
-    FILE="photon-db-${COUNTRY}-latest.tar.bz2"
+    FILE="photon-db-${COUNTRY}-250720.tar.bz2"
     LINK="http://download1.graphhopper.com/public/extracts/by-country-code/${COUNTRY}/${FILE}"
 fi
 
